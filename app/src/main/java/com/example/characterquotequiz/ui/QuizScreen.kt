@@ -64,6 +64,6 @@ fun QuizItem(quiz: QuizResponse, index: Int) {
 @Composable
 fun QuizItemPreview() {
     CharacterQuoteQuizTheme {
-        QuizItem(QuizResponse("OnePiece?", "Zoro", "Who am I?"), 0)
+        QuizItem(QuizResponse("Zoro", "Who am I?"), 0)
     }
 }

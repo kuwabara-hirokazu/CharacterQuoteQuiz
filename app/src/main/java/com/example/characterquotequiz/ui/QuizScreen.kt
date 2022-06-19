@@ -13,7 +13,7 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.characterquotequiz.data.Quiz
+import com.example.characterquotequiz.data.entity.QuizResponse
 import com.example.characterquotequiz.ui.theme.CharacterQuoteQuizTheme
 
 @Composable
@@ -28,7 +28,7 @@ fun QuizListScreen(viewModel: QuizViewModel) {
 }
 
 @Composable
-fun QuizItem(quiz: Quiz, index: Int) {
+fun QuizItem(quiz: QuizResponse, index: Int) {
     Column(
         modifier = Modifier
             .padding(horizontal = 16.dp)
@@ -37,7 +37,7 @@ fun QuizItem(quiz: Quiz, index: Int) {
         Row {
             Text(text = "Q${index + 1}.")
             Spacer(modifier = Modifier.width(4.dp))
-            Text(text = quiz.question)
+            Text(text = quiz.quote)
         }
         Spacer(modifier = Modifier.height(12.dp))
 
@@ -54,7 +54,7 @@ fun QuizItem(quiz: Quiz, index: Int) {
                     .padding(vertical = 8.dp)
                     .fillMaxWidth()
             ) {
-                if (isExpanded) Text(text = quiz.answer, color = surfaceColor)
+                if (isExpanded) Text(text = quiz.character, color = surfaceColor)
             }
         }
     }
@@ -64,6 +64,6 @@ fun QuizItem(quiz: Quiz, index: Int) {
 @Composable
 fun QuizItemPreview() {
     CharacterQuoteQuizTheme {
-        QuizItem(Quiz("Who am I?", "Taro"), 0)
+        QuizItem(QuizResponse("OnePiece?", "Zoro", "Who am I?"), 0)
     }
 }

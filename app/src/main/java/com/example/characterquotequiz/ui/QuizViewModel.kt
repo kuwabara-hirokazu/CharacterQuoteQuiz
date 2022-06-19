@@ -3,21 +3,24 @@ package com.example.characterquotequiz.ui
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.characterquotequiz.data.Quiz
+import androidx.lifecycle.viewModelScope
+import com.example.characterquotequiz.data.entity.QuizResponse
+import com.example.characterquotequiz.data.repository.QuizRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class QuizViewModel @Inject constructor() : ViewModel() {
+class QuizViewModel @Inject constructor(
+    private val repository: QuizRepository
+) : ViewModel() {
 
-    private val _quizList = MutableLiveData<List<Quiz>>()
-    val quizList: LiveData<List<Quiz>> = _quizList
+    private val _quizList = MutableLiveData<List<QuizResponse>>()
+    val quizList: LiveData<List<QuizResponse>> = _quizList
 
     fun getQuizList() {
-        _quizList.value = listOf(
-            Quiz("Who am I?", "Taro"),
-            Quiz("Who am I?", "Jiro"),
-            Quiz("Who am I?", "Saburo"),
-        )
+        viewModelScope.launch {
+            _quizList.value = repository.getQuotesByAnime()
+        }
     }
 }

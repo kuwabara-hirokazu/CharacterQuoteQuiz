@@ -6,5 +6,5 @@ import javax.inject.Inject
 class QuizRepository @Inject constructor(
     private val api: AnimeApi
 ) {
-    suspend fun getQuotesByAnime() = api.getQuotesByAnime()
+    suspend fun getQuotesByAnime(title: String, page: Int) = api.getQuotesByAnime(title, page)
 }

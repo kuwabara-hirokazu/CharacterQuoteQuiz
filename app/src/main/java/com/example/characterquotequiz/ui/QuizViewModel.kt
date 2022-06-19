@@ -1,5 +1,6 @@
 package com.example.characterquotequiz.ui
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -18,9 +19,16 @@ class QuizViewModel @Inject constructor(
     private val _quizList = MutableLiveData<List<QuizResponse>>()
     val quizList: LiveData<List<QuizResponse>> = _quizList
 
+    private var page: Int = 0
+
     fun getQuizList() {
         viewModelScope.launch {
-            _quizList.value = repository.getQuotesByAnime()
+            try {
+                _quizList.value = repository.getQuotesByAnime("One Piece", page)
+                page += 10
+            } catch (error: Exception) {
+                Log.e(QuizViewModel::class.java.name, "Fetch error: ${error.message}", error)
+            }
         }
     }
 }

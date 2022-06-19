@@ -7,13 +7,15 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.characterquotequiz.ui.model.Quiz
 import com.example.characterquotequiz.usecase.QuizUseCase
+import com.example.characterquotequiz.usecase.TranslateUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class QuizViewModel @Inject constructor(
-    private val useCase: QuizUseCase
+    private val useCase: QuizUseCase,
+    private val translateUseCase: TranslateUseCase
 ) : ViewModel() {
 
     private val _quizList = MutableLiveData<List<Quiz>>()
@@ -28,6 +30,16 @@ class QuizViewModel @Inject constructor(
                 page += 10
             } catch (error: Exception) {
                 Log.e(QuizViewModel::class.java.name, "Fetch error: ${error.message}", error)
+            }
+        }
+    }
+
+    fun translate(text: String) {
+        viewModelScope.launch {
+            try {
+                translateUseCase.translate(text)
+            } catch (error: Exception) {
+                Log.e(QuizViewModel::class.java.name, "Translate error: ${error.message}", error)
             }
         }
     }

@@ -1,20 +1,20 @@
 package com.example.characterquotequiz.ui
 
+import android.webkit.WebView
+import android.webkit.WebViewClient
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.characterquotequiz.data.entity.QuizResponse
-import com.example.characterquotequiz.ui.theme.CharacterQuoteQuizTheme
+import androidx.compose.ui.viewinterop.AndroidView
+import com.example.characterquotequiz.ui.model.Quiz
 
 @Composable
 fun QuizListScreen(viewModel: QuizViewModel) {
@@ -22,20 +22,20 @@ fun QuizListScreen(viewModel: QuizViewModel) {
 
     LazyColumn() {
         items(quizList.size) { index ->
-            QuizItem(quizList[index], index)
+            QuizItem(quizList[index])
         }
     }
 }
 
 @Composable
-fun QuizItem(quiz: QuizResponse, index: Int) {
+fun QuizItem(quiz: Quiz) {
     Column(
         modifier = Modifier
             .padding(horizontal = 16.dp)
             .padding(top = 16.dp)
     ) {
         Row {
-            Text(text = "Q${index + 1}.")
+            Text(text = "Q${quiz.id}.")
             Spacer(modifier = Modifier.width(4.dp))
             Text(text = quiz.quote)
         }
@@ -48,22 +48,28 @@ fun QuizItem(quiz: QuizResponse, index: Int) {
 
         Column(modifier = Modifier.clickable { isExpanded = !isExpanded }) {
             Text(text = "Ans.", modifier = Modifier.fillMaxWidth())
-            Surface(
+            Column(
                 modifier = Modifier
                     .animateContentSize()
                     .padding(vertical = 8.dp)
                     .fillMaxWidth()
             ) {
-                if (isExpanded) Text(text = quiz.character, color = surfaceColor)
+                if (isExpanded) {
+                    Text(text = quiz.character, color = surfaceColor)
+                    CharacterImage(url = quiz.characterUrl)
+                }
             }
         }
     }
 }
 
-@Preview
 @Composable
-fun QuizItemPreview() {
-    CharacterQuoteQuizTheme {
-        QuizItem(QuizResponse("Zoro", "Who am I?"), 0)
-    }
+fun CharacterImage(url: String) {
+    AndroidView(
+        factory = ::WebView,
+        update = { webView ->
+            webView.webViewClient = WebViewClient()
+            webView.loadUrl(url)
+        }
+    )
 }

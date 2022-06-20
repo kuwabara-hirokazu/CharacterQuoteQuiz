@@ -5,7 +5,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.characterquotequiz.data.entity.TranslationResult
 import com.example.characterquotequiz.ui.model.Quiz
 import com.example.characterquotequiz.usecase.QuizUseCase
 import com.example.characterquotequiz.usecase.TranslateUseCase
@@ -21,9 +20,6 @@ class QuizViewModel @Inject constructor(
 
     private val _quizList = MutableLiveData<List<Quiz>>()
     val quizList: LiveData<List<Quiz>> = _quizList
-
-    private val _transitionResult = MutableLiveData<TranslationResult>()
-    val transitionResult: LiveData<TranslationResult> = _transitionResult
 
     private var page: Int = 0
 

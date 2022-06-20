@@ -13,6 +13,7 @@ class QuizUseCase @Inject constructor(
                 id = page + index + 1,
                 character = response.character,
                 quote = response.quote,
+                translateQuote = null,
                 characterUrl = "$GOOGLE_SEARCH_URL&q=$title+${response.character}"
             )
         }

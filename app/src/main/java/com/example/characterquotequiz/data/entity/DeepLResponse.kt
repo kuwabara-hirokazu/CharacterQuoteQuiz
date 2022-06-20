@@ -1,9 +1,9 @@
 package com.example.characterquotequiz.data.entity
 
 data class DeepLResponse(
-    val translations: List<Translations>
+    val translations: List<TranslationResult>
 )
 
-data class Translations(
+data class TranslationResult(
     val text: String
 )

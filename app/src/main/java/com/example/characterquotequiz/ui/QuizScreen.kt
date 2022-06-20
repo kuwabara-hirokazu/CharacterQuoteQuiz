@@ -4,14 +4,16 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.animateContentSize
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material.Button
+import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import com.example.characterquotequiz.ui.model.Quiz
@@ -22,13 +24,13 @@ fun QuizListScreen(viewModel: QuizViewModel) {
 
     LazyColumn() {
         items(quizList.size) { index ->
-            QuizItem(quizList[index])
+            QuizItem(quizList[index]) { viewModel.translate(index) }
         }
     }
 }
 
 @Composable
-fun QuizItem(quiz: Quiz) {
+fun QuizItem(quiz: Quiz, onQuoteTranslate: (String) -> Unit) {
     Column(
         modifier = Modifier
             .padding(horizontal = 16.dp)
@@ -46,8 +48,33 @@ fun QuizItem(quiz: Quiz) {
             if (isExpanded) MaterialTheme.colors.primary else MaterialTheme.colors.surface
         )
 
-        Column(modifier = Modifier.clickable { isExpanded = !isExpanded }) {
-            Text(text = "Ans.", modifier = Modifier.fillMaxWidth())
+        Column {
+            Button(
+                enabled = quiz.translateQuote == null,
+                onClick = { onQuoteTranslate(quiz.quote) },
+                colors = ButtonDefaults.buttonColors(
+                    backgroundColor = Color.Blue,
+                    contentColor = Color.White,
+                    disabledBackgroundColor = Color.Gray,
+                    disabledContentColor = Color.White
+                ),
+                modifier = Modifier.width(100.dp)
+            ) {
+                Text(text = "翻訳")
+            }
+            quiz.translateQuote?.let { Text(text = it, modifier = Modifier.fillMaxWidth()) }
+            Spacer(modifier = Modifier.height(12.dp))
+
+            Button(
+                onClick = { isExpanded = !isExpanded },
+                colors = ButtonDefaults.textButtonColors(
+                    backgroundColor = Color.Red,
+                    contentColor = Color.White
+                ),
+                modifier = Modifier.width(100.dp)
+            ) {
+                Text(text = "Ans.")
+            }
             Column(
                 modifier = Modifier
                     .animateContentSize()

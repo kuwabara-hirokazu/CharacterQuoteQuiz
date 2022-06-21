@@ -21,14 +21,14 @@ class QuizViewModel @Inject constructor(
     private val _quizList = MutableLiveData<List<Quiz>>()
     val quizList: LiveData<List<Quiz>> = _quizList
 
-    private var page: Int = 0
+    private var startPosition: Int = 0
 
     fun getQuizList() {
         val quizList = quizList.value ?: listOf()
-        page += quizList.size
+        startPosition += quizList.size
         viewModelScope.launch {
             try {
-                _quizList.value = useCase.getQuotesByAnime("One Piece", page, quizList)
+                _quizList.value = useCase.getQuotesByAnime("One Piece", startPosition, quizList)
             } catch (error: Exception) {
                 Log.e(QuizViewModel::class.java.name, "Fetch error: ${error.message}", error)
             }

@@ -24,10 +24,11 @@ class QuizViewModel @Inject constructor(
     private var page: Int = 0
 
     fun getQuizList() {
+        val quizList = quizList.value ?: listOf()
+        page += quizList.size
         viewModelScope.launch {
             try {
-                _quizList.value = useCase.getQuotesByAnime("One Piece", page)
-                page += 10
+                _quizList.value = useCase.getQuotesByAnime("One Piece", page, quizList)
             } catch (error: Exception) {
                 Log.e(QuizViewModel::class.java.name, "Fetch error: ${error.message}", error)
             }

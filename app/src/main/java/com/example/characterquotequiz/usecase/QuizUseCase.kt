@@ -7,10 +7,10 @@ import javax.inject.Inject
 class QuizUseCase @Inject constructor(
     private val repository: QuizRepository
 ) {
-    suspend fun getQuotesByAnime(title: String, page: Int): List<Quiz> {
-        return repository.getQuotesByAnime(title, page).mapIndexed { index, response ->
+    suspend fun getQuotesByAnime(title: String, page: Int, quizList: List<Quiz>): List<Quiz> {
+        return quizList + repository.getQuotesByAnime(title, page).mapIndexed { index, response ->
             Quiz(
-                id = page + index + 1,
+                id = quizList.size + index + 1,
                 character = response.character,
                 quote = response.quote,
                 translateQuote = null,

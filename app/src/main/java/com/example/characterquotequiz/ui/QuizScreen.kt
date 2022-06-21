@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
@@ -25,6 +26,8 @@ fun QuizListScreen(viewModel: QuizViewModel) {
         items(quizList.size) { index ->
             QuizItem(quizList[index]) { viewModel.translate(index) }
         }
+        // Todo ハンドリング
+        item { if (quizList.isNotEmpty()) LoadingIndicator(viewModel) }
     }
 }
 
@@ -92,6 +95,15 @@ fun QuizItem(quiz: Quiz, onQuoteTranslate: (String) -> Unit) {
                 }
             }
         }
+    }
+}
+
+@Composable
+fun LoadingIndicator(viewModel: QuizViewModel) {
+    CircularProgressIndicator()
+
+    LaunchedEffect(key1 = true) {
+        viewModel.getQuizList()
     }
 }
 

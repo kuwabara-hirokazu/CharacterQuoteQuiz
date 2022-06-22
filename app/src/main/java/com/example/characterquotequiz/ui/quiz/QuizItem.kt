@@ -6,8 +6,10 @@ import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
@@ -23,75 +25,94 @@ fun QuizItem(quiz: Quiz, onQuoteTranslate: (String) -> Unit) {
     Column(
         modifier = Modifier.padding(16.dp)
     ) {
-        QuestionSection(quiz)
+        Row {
+            Text(
+                text = stringResource(R.string.question, quiz.id.toString()),
+                fontWeight = FontWeight.Bold
+            )
+            Spacer(modifier = Modifier.width(4.dp))
+            Text(text = quiz.quote)
+        }
         Spacer(modifier = Modifier.height(12.dp))
 
+        var isLoading by remember { mutableStateOf(false) }
         var isExpanded by remember { mutableStateOf(false) }
-        AnswerSection(quiz, onQuoteTranslate, isExpanded) { isExpanded = !it }
+
+        Column(Modifier.padding(horizontal = 8.dp)) {
+            ReactionButtons(
+                quiz = quiz,
+                isLoading = isLoading,
+                startLoading = { isLoading = true },
+                onQuoteTranslate = onQuoteTranslate,
+                isExpanded = isExpanded,
+                onAnswerClicked = { isExpanded = !it }
+            )
+            AnswerResult(isLoading, quiz, isExpanded) { isLoading = false }
+        }
     }
 }
 
 @Composable
-fun QuestionSection(quiz: Quiz) {
-    Row {
-        Text(
-            text = stringResource(R.string.question, quiz.id.toString()),
-            fontWeight = FontWeight.Bold
-        )
-        Spacer(modifier = Modifier.width(4.dp))
-        Text(text = quiz.quote)
-    }
-}
-
-@Composable
-fun AnswerSection(
+fun ReactionButtons(
     quiz: Quiz,
+    isLoading: Boolean,
+    startLoading: () -> Unit,
     onQuoteTranslate: (String) -> Unit,
     isExpanded: Boolean,
     onAnswerClicked: (Boolean) -> Unit
 ) {
-    Column(Modifier.padding(horizontal = 8.dp)) {
-        Row {
-            Button(
-                enabled = quiz.translateQuote == null,
-                onClick = { onQuoteTranslate(quiz.quote) },
-                colors = ButtonDefaults.buttonColors(
-                    backgroundColor = Color.Blue,
-                    contentColor = Color.White,
-                    disabledBackgroundColor = Color.Gray,
-                    disabledContentColor = Color.White
-                ),
-                modifier = Modifier.width(100.dp)
-            ) {
-                Text(text = stringResource(R.string.translate))
-            }
-            Spacer(modifier = Modifier.width(20.dp))
-            Button(
-                onClick = { onAnswerClicked(isExpanded) },
-                colors = ButtonDefaults.textButtonColors(
-                    backgroundColor = Color.Red,
-                    contentColor = Color.White
-                ),
-                modifier = Modifier.width(100.dp)
-            ) {
-                Text(text = stringResource(R.string.answer))
-            }
+    Row {
+        Button(
+            enabled = !isLoading && quiz.translateQuote == null,
+            onClick = {
+                startLoading()
+                onQuoteTranslate(quiz.quote)
+            },
+            colors = ButtonDefaults.buttonColors(
+                backgroundColor = Color.Blue,
+                contentColor = Color.White,
+                disabledBackgroundColor = Color.Gray,
+                disabledContentColor = Color.White
+            ),
+            modifier = Modifier.width(100.dp)
+        ) {
+            Text(text = stringResource(R.string.translate))
         }
-        AnswerResult(quiz, isExpanded)
+        Spacer(modifier = Modifier.width(20.dp))
+        Button(
+            onClick = { onAnswerClicked(isExpanded) },
+            colors = ButtonDefaults.textButtonColors(
+                backgroundColor = Color.Red,
+                contentColor = Color.White
+            ),
+            modifier = Modifier.width(100.dp)
+        ) {
+            Text(text = stringResource(R.string.answer))
+        }
     }
 }
 
 @Composable
 fun AnswerResult(
+    isLoading: Boolean,
     quiz: Quiz,
-    isExpanded: Boolean
+    isExpanded: Boolean,
+    shownTranslateQuote: () -> Unit
 ) {
     Column(
         modifier = Modifier
             .animateContentSize()
             .fillMaxWidth()
     ) {
+        if (isLoading) {
+            CircularProgressIndicator(
+                Modifier
+                    .align(alignment = Alignment.CenterHorizontally)
+                    .padding(top = 8.dp)
+            )
+        }
         quiz.translateQuote?.let {
+            shownTranslateQuote()
             Text(
                 text = it, modifier = Modifier
                     .fillMaxWidth()

@@ -114,18 +114,25 @@ fun AnswerResult(
         quiz.translateQuote?.let {
             shownTranslateQuote()
             Text(
-                text = it, modifier = Modifier
+                text = it,
+                color = Color.Blue,
+                modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 8.dp)
             )
         }
         if (isExpanded) {
-            Text(
-                text = quiz.character,
-                color = Color.Red,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(vertical = 12.dp)
-            )
+            Row(modifier = Modifier.padding(vertical = 12.dp)) {
+                Text(
+                    text = stringResource(R.string.answer_header),
+                    fontWeight = FontWeight.Bold,
+                )
+                Text(
+                    text = quiz.character,
+                    color = Color.Red,
+                    fontWeight = FontWeight.Bold,
+                )
+            }
             CharacterImage(url = quiz.characterUrl)
         }
     }

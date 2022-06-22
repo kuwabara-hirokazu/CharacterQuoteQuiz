@@ -27,7 +27,7 @@ fun QuizListScreen(viewModel: QuizViewModel) {
             QuizItem(quizList[index]) { viewModel.translate(index) }
         }
         // Todo ハンドリング
-        item { if (quizList.isNotEmpty()) LoadingIndicator(viewModel) }
+        item { if (quizList.isNotEmpty()) LoadingIndicator { viewModel.getQuizList() } }
     }
 }
 
@@ -99,11 +99,11 @@ fun QuizItem(quiz: Quiz, onQuoteTranslate: (String) -> Unit) {
 }
 
 @Composable
-fun LoadingIndicator(viewModel: QuizViewModel) {
+fun LoadingIndicator(loadPage: () -> Unit) {
     CircularProgressIndicator()
 
     LaunchedEffect(key1 = true) {
-        viewModel.getQuizList()
+        loadPage()
     }
 }
 

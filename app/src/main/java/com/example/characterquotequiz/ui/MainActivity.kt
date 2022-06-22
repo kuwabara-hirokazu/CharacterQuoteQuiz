@@ -7,9 +7,9 @@ import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import com.example.characterquotequiz.ui.quiz.QuizListScreen
+import com.example.characterquotequiz.ui.quiz.QuizViewModel
 import com.example.characterquotequiz.ui.theme.CharacterQuoteQuizTheme
 import dagger.hilt.android.AndroidEntryPoint
 

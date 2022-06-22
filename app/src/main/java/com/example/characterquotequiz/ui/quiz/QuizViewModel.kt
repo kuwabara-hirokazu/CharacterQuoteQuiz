@@ -1,4 +1,4 @@
-package com.example.characterquotequiz.ui
+package com.example.characterquotequiz.ui.quiz
 
 import android.util.Log
 import androidx.lifecycle.LiveData

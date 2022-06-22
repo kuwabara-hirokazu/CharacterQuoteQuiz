@@ -10,10 +10,12 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
+import com.example.characterquotequiz.R
 import com.example.characterquotequiz.ui.model.Quiz
 
 @Composable
@@ -32,7 +34,10 @@ fun QuizItem(quiz: Quiz, onQuoteTranslate: (String) -> Unit) {
 @Composable
 fun QuestionSection(quiz: Quiz) {
     Row {
-        Text(text = "Q${quiz.id}.", fontWeight = FontWeight.Bold)
+        Text(
+            text = stringResource(R.string.question, quiz.id.toString()),
+            fontWeight = FontWeight.Bold
+        )
         Spacer(modifier = Modifier.width(4.dp))
         Text(text = quiz.quote)
     }
@@ -58,7 +63,7 @@ fun AnswerSection(
                 ),
                 modifier = Modifier.width(100.dp)
             ) {
-                Text(text = "翻訳")
+                Text(text = stringResource(R.string.translate))
             }
             Spacer(modifier = Modifier.width(20.dp))
             Button(
@@ -69,7 +74,7 @@ fun AnswerSection(
                 ),
                 modifier = Modifier.width(100.dp)
             ) {
-                Text(text = "Answer")
+                Text(text = stringResource(R.string.answer))
             }
         }
         AnswerResult(quiz, isExpanded)

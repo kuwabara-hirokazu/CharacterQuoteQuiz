@@ -5,4 +5,6 @@
     <string name="translate">翻訳</string>
     <string name="answer">Answer</string>
     <string name="answer_header">"Answer:  "</string>
+
+    <string name="fetch_error_404">"これ以上データがありません"</string>
 </resources>

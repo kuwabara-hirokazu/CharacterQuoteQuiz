@@ -8,15 +8,16 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 
 @Composable
-fun QuizListScreen(viewModel: QuizViewModel) {
+fun QuizListScreen(viewModel: QuizViewModel, canLoading: Boolean) {
     val quizList by viewModel.quizList.observeAsState(listOf())
 
     LazyColumn() {
         items(quizList.size) { index ->
             QuizItem(quizList[index]) { viewModel.translate(index) }
         }
-        // Todo ハンドリング
-        item { if (quizList.isNotEmpty()) LoadingIndicator { viewModel.getQuizList() } }
+        item {
+            if (quizList.isNotEmpty() && canLoading) LoadingIndicator { viewModel.getQuizList() }
+        }
     }
 }
 

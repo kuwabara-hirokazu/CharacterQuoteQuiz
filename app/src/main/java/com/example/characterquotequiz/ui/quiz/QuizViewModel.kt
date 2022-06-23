@@ -5,11 +5,13 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.characterquotequiz.R
 import com.example.characterquotequiz.ui.model.Quiz
 import com.example.characterquotequiz.usecase.QuizUseCase
 import com.example.characterquotequiz.usecase.TranslateUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import retrofit2.HttpException
 import javax.inject.Inject
 
 @HiltViewModel
@@ -21,7 +23,10 @@ class QuizViewModel @Inject constructor(
     private val _quizList = MutableLiveData<List<Quiz>>()
     val quizList: LiveData<List<Quiz>> = _quizList
 
-    private var startPosition: Int = 0
+    private val _errorMessage = MutableLiveData<Int>()
+    val errorMessage: LiveData<Int> = _errorMessage
+
+    private var startPosition: Int = 10
 
     fun getQuizList() {
         val quizList = quizList.value ?: listOf()
@@ -30,6 +35,9 @@ class QuizViewModel @Inject constructor(
             try {
                 _quizList.value = useCase.getQuotesByAnime("One Piece", startPosition, quizList)
             } catch (error: Exception) {
+                if (error is HttpException && error.code() == 404) {
+                    _errorMessage.value = R.string.fetch_error_404
+                }
                 Log.e(QuizViewModel::class.java.name, "Fetch error: ${error.message}", error)
             }
         }

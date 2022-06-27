@@ -7,7 +7,8 @@ import javax.inject.Inject
 class TranslateUseCase @Inject constructor(
     private val repository: TranslateRepository
 ) {
-    suspend fun translate(quizList: List<Quiz>, targetIndex: Int): List<Quiz> {
+    suspend fun translate(quizList: List<Quiz>, quizId: Int): List<Quiz> {
+        val targetIndex = quizId - 1
         val translationResult = repository.translate(
             text = quizList[targetIndex].quote,
             targetLang = JAPAN_LANG

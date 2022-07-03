@@ -7,5 +7,8 @@
     <string name="answer_character">"キャラ名:  "</string>
     <string name="check_character_image">"キャラ画像を確認"</string>
 
+    <string name="title_anime_quiz">OnePieceセリフクイズ</string>
+    <string name="title_character_image">キャラ画像</string>
+
     <string name="fetch_error_404">"これ以上データがありません"</string>
 </resources>

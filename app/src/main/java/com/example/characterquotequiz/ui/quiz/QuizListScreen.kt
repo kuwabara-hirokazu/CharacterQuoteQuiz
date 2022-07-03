@@ -8,7 +8,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.foundation.lazy.items
 import androidx.navigation.NavController
-import com.example.characterquotequiz.ui.NavigationDestination
+import com.example.characterquotequiz.ui.navigation.NavigationDestination
 
 @Composable
 fun QuizListScreen(viewModel: QuizViewModel, canLoading: Boolean, navController: NavController) {

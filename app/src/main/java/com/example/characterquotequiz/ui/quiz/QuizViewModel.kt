@@ -26,7 +26,7 @@ class QuizViewModel @Inject constructor(
     private val _errorMessage = MutableLiveData<Int>()
     val errorMessage: LiveData<Int> = _errorMessage
 
-    private var startPosition: Int = 10
+    private var startPosition: Int = 0
 
     fun getQuizList() {
         val quizList = quizList.value ?: listOf()

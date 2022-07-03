@@ -7,9 +7,11 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.foundation.lazy.items
+import androidx.navigation.NavController
+import com.example.characterquotequiz.ui.NavigationDestination
 
 @Composable
-fun QuizListScreen(viewModel: QuizViewModel, canLoading: Boolean) {
+fun QuizListScreen(viewModel: QuizViewModel, canLoading: Boolean, navController: NavController) {
     val quizList by viewModel.quizList.observeAsState(listOf())
 
     LazyColumn {
@@ -20,7 +22,13 @@ fun QuizListScreen(viewModel: QuizViewModel, canLoading: Boolean) {
                 quiz.id
             }
         ) { quiz ->
-            QuizItem(quiz) { viewModel.translate(quiz.id) }
+            QuizItem(
+                quiz,
+                onQuoteTranslate = { viewModel.translate(quiz.id) },
+                navigateToCharacterImage = {
+                    navController.navigate("${NavigationDestination.route}/$it")
+                }
+            )
         }
         item {
             if (quizList.isNotEmpty() && canLoading) LoadingIndicator { viewModel.getQuizList() }

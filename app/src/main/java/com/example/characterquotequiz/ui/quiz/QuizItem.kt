@@ -1,7 +1,5 @@
 package com.example.characterquotequiz.ui.quiz
 
-import android.webkit.WebView
-import android.webkit.WebViewClient
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Button
@@ -16,12 +14,15 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.viewinterop.AndroidView
 import com.example.characterquotequiz.R
 import com.example.characterquotequiz.ui.model.Quiz
 
 @Composable
-fun QuizItem(quiz: Quiz, onQuoteTranslate: (String) -> Unit) {
+fun QuizItem(
+    quiz: Quiz,
+    onQuoteTranslate: (String) -> Unit,
+    navigateToCharacterImage: (String) -> Unit
+) {
     Column(
         modifier = Modifier.padding(16.dp)
     ) {
@@ -47,7 +48,13 @@ fun QuizItem(quiz: Quiz, onQuoteTranslate: (String) -> Unit) {
                 isExpanded = isExpanded,
                 onAnswerClicked = { isExpanded = !it }
             )
-            AnswerResult(isLoading, quiz, isExpanded) { isLoading = false }
+            AnswerResult(
+                isLoading,
+                quiz,
+                isExpanded,
+                shownTranslateQuote = { isLoading = false },
+                navigateToCharacterImage = navigateToCharacterImage
+            )
         }
     }
 }
@@ -97,7 +104,8 @@ fun AnswerResult(
     isLoading: Boolean,
     quiz: Quiz,
     isExpanded: Boolean,
-    shownTranslateQuote: () -> Unit
+    shownTranslateQuote: () -> Unit,
+    navigateToCharacterImage: (String) -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -124,7 +132,7 @@ fun AnswerResult(
         if (isExpanded) {
             Row(modifier = Modifier.padding(vertical = 12.dp)) {
                 Text(
-                    text = stringResource(R.string.answer_header),
+                    text = stringResource(R.string.answer_character),
                     fontWeight = FontWeight.Bold,
                 )
                 Text(
@@ -133,23 +141,17 @@ fun AnswerResult(
                     fontWeight = FontWeight.Bold,
                 )
             }
-            CharacterImage(url = quiz.characterUrl)
+            Button(
+                onClick = { navigateToCharacterImage(quiz.characterUrl) },
+                colors = ButtonDefaults.textButtonColors(
+                    backgroundColor = Color.Magenta,
+                    contentColor = Color.White
+                )
+            ) {
+                Text(text = stringResource(R.string.check_character_image))
+            }
         }
     }
-}
-
-@Composable
-fun CharacterImage(url: String) {
-    AndroidView(
-        factory = ::WebView,
-        update = { webView ->
-            webView.webViewClient = WebViewClient()
-            webView.loadUrl(url)
-        },
-        modifier = Modifier
-            .height(320.dp)
-            .fillMaxWidth()
-    )
 }
 
 @Composable
@@ -163,6 +165,7 @@ fun QuizItemPreview() {
             translateQuote = "海賊王に俺はなる！",
             characterUrl = "https://www.google.com/search?tbm=isch&q=One Piece+Luffy"
         ),
-        onQuoteTranslate = {}
+        onQuoteTranslate = {},
+        navigateToCharacterImage = {}
     )
 }

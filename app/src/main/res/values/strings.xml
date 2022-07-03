@@ -4,7 +4,8 @@
     <string name="question">Q%1$s.</string>
     <string name="translate">翻訳</string>
     <string name="answer">Answer</string>
-    <string name="answer_header">"Answer:  "</string>
+    <string name="answer_character">"キャラ名:  "</string>
+    <string name="check_character_image">"キャラ画像を確認"</string>
 
     <string name="fetch_error_404">"これ以上データがありません"</string>
 </resources>

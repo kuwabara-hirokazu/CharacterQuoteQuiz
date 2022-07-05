@@ -11,7 +11,7 @@ import com.example.characterquotequiz.ui.quiz.QuizViewModel
 import com.example.characterquotequiz.ui.webview.CharacterImage
 
 @Composable
-fun AppNavHost(viewModel: QuizViewModel, errorMessage: Int?, navController: NavHostController) {
+fun AppNavHost(viewModel: QuizViewModel, navController: NavHostController, showError: (Int) -> Unit) {
     NavHost(
         navController = navController,
         startDestination = NavigationDestination.destination
@@ -19,8 +19,8 @@ fun AppNavHost(viewModel: QuizViewModel, errorMessage: Int?, navController: NavH
         composable(NavigationDestination.destination) {
             QuizListScreen(
                 viewModel,
-                errorMessage == null,
-                navController
+                navController,
+                showError
             )
         }
         composable(

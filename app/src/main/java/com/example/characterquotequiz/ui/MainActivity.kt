@@ -31,12 +31,10 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    val errorMessage by viewModel.errorMessage.observeAsState()
-                    errorMessage?.let { showToast(it) }
 
                     val navController = rememberNavController()
 
-                    AppNavHost(viewModel, errorMessage, navController)
+                    AppNavHost(viewModel, navController) { showToast(it) }
                 }
             }
         }

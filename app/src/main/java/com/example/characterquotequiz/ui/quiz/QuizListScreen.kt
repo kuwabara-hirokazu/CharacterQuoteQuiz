@@ -6,7 +6,6 @@ import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.collectAsState
 import androidx.navigation.NavController
@@ -15,14 +14,14 @@ import com.example.characterquotequiz.ui.TopBar
 import com.example.characterquotequiz.ui.navigation.NavigationDestination
 
 @Composable
-fun QuizListScreen(viewModel: QuizViewModel, canLoading: Boolean, navController: NavController) {
-    val quizList by viewModel.quizState.collectAsState()
+fun QuizListScreen(viewModel: QuizViewModel, navController: NavController, showError: (Int) -> Unit) {
+    val quizState by viewModel.uiState.collectAsState()
     Column {
         TopBar(title = R.string.title_anime_quiz)
         LazyColumn {
             // keyを設定しないとquizのある要素が削除されるとquizListの全てがRecomposeされてしまう
             items(
-                items = quizList,
+                items = quizState.quizList,
                 key = { quiz ->
                     quiz.id
                 }
@@ -36,8 +35,11 @@ fun QuizListScreen(viewModel: QuizViewModel, canLoading: Boolean, navController:
                 )
             }
             item {
-                if (quizList.isNotEmpty() && canLoading) LoadingIndicator { viewModel.getQuizList() }
+                if (quizState.quizList.isNotEmpty() && quizState.error != null) LoadingIndicator { viewModel.getQuizList() }
             }
+        }
+        quizState.error?.let {
+            showError(it)
         }
     }
 }

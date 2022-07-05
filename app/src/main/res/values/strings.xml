@@ -11,4 +11,5 @@
     <string name="title_character_image">キャラ画像</string>
 
     <string name="fetch_error_404">"これ以上データがありません"</string>
+    <string name="unknown_error">不明なエラーです。時間をおいて再度アクセスしてください。</string>
 </resources>

@@ -1,7 +1,6 @@
 package com.example.characterquotequiz.ui.quiz
 
 import android.util.Log
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -14,6 +13,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import javax.inject.Inject
@@ -24,24 +24,25 @@ class QuizViewModel @Inject constructor(
     private val translateUseCase: TranslateUseCase
 ) : ViewModel() {
 
-    private val _quizState = MutableStateFlow<List<Quiz>>(listOf())
-    val quizState: StateFlow<List<Quiz>> = _quizState.asStateFlow()
-
-    private val _errorMessage = MutableLiveData<Int>()
-    val errorMessage: LiveData<Int> = _errorMessage
+    private val _uiState = MutableStateFlow(QuizScreenState())
+    val uiState: StateFlow<QuizScreenState> = _uiState.asStateFlow()
 
     private var startPosition: Int = 0
 
     fun getQuizList() {
-        val quizList = quizState.value
+        val quizList = uiState.value.quizList
         startPosition += quizList.size
         viewModelScope.launch {
             try {
-                _quizState.value = useCase.getQuotesByAnime("One Piece", startPosition, quizList)
+                val result = useCase.getQuotesByAnime("One Piece", startPosition, quizList)
+                _uiState.update { QuizScreenState(result) }
             } catch (error: Exception) {
-                if (error is HttpException && error.code() == 404) {
-                    _errorMessage.value = R.string.fetch_error_404
+                val errorMessage = if (error is HttpException && error.code() == 404) {
+                    R.string.fetch_error_404
+                } else {
+                    R.string.unknown_error
                 }
+                _uiState.update { QuizScreenState(error = errorMessage) }
                 Log.e(QuizViewModel::class.java.name, "Fetch error: ${error.message}", error)
             }
         }
@@ -50,8 +51,10 @@ class QuizViewModel @Inject constructor(
     fun translate(index: Int) {
         viewModelScope.launch {
             try {
-                _quizState.value = translateUseCase.translate(quizState.value, index)
+                val result = translateUseCase.translate(uiState.value.quizList, index)
+                _uiState.update { QuizScreenState(result) }
             } catch (error: Exception) {
+                _uiState.update { QuizScreenState(error = R.string.unknown_error) }
                 Log.e(QuizViewModel::class.java.name, "Translate error: ${error.message}", error)
             }
         }

@@ -8,6 +8,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.foundation.lazy.items
+import androidx.compose.runtime.collectAsState
 import androidx.navigation.NavController
 import com.example.characterquotequiz.R
 import com.example.characterquotequiz.ui.TopBar
@@ -15,7 +16,7 @@ import com.example.characterquotequiz.ui.navigation.NavigationDestination
 
 @Composable
 fun QuizListScreen(viewModel: QuizViewModel, canLoading: Boolean, navController: NavController) {
-    val quizList by viewModel.quizList.observeAsState(listOf())
+    val quizList by viewModel.quizState.collectAsState()
     Column {
         TopBar(title = R.string.title_anime_quiz)
         LazyColumn {

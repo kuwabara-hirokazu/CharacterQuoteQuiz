@@ -2,16 +2,16 @@ package com.example.characterquotequiz.ui.quiz
 
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Button
-import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.Text
+import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.characterquotequiz.R
@@ -23,38 +23,45 @@ fun QuizItem(
     onQuoteTranslate: (String) -> Unit,
     navigateToCharacterImage: (String) -> Unit
 ) {
-    Column(
-        modifier = Modifier.padding(16.dp)
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(12.dp),
+        elevation = 10.dp
     ) {
-        Row {
-            Text(
-                text = stringResource(R.string.question, quiz.id.toString()),
-                fontWeight = FontWeight.Bold
-            )
-            Spacer(modifier = Modifier.width(4.dp))
-            Text(text = quiz.quote)
-        }
-        Spacer(modifier = Modifier.height(12.dp))
+        Column(
+            modifier = Modifier.padding(16.dp)
+        ) {
+            Row {
+                Text(
+                    text = stringResource(R.string.question, quiz.id.toString()),
+                    fontWeight = FontWeight.Bold
+                )
+                Spacer(modifier = Modifier.width(4.dp))
+                Text(text = quiz.quote)
+            }
+            Spacer(modifier = Modifier.height(12.dp))
 
-        var isLoading by remember { mutableStateOf(false) }
-        var isExpanded by remember { mutableStateOf(false) }
+            var isLoading by remember { mutableStateOf(false) }
+            var isExpanded by remember { mutableStateOf(false) }
 
-        Column(Modifier.padding(horizontal = 8.dp)) {
-            ReactionButtons(
-                quiz = quiz,
-                isLoading = isLoading,
-                startLoading = { isLoading = true },
-                onQuoteTranslate = onQuoteTranslate,
-                isExpanded = isExpanded,
-                onAnswerClicked = { isExpanded = !it }
-            )
-            AnswerResult(
-                isLoading,
-                quiz,
-                isExpanded,
-                shownTranslateQuote = { isLoading = false },
-                navigateToCharacterImage = navigateToCharacterImage
-            )
+            Column(Modifier.padding(horizontal = 8.dp)) {
+                ReactionButtons(
+                    quiz = quiz,
+                    isLoading = isLoading,
+                    startLoading = { isLoading = true },
+                    onQuoteTranslate = onQuoteTranslate,
+                    isExpanded = isExpanded,
+                    onAnswerClicked = { isExpanded = !it }
+                )
+                AnswerResult(
+                    isLoading,
+                    quiz,
+                    isExpanded,
+                    shownTranslateQuote = { isLoading = false },
+                    navigateToCharacterImage = navigateToCharacterImage
+                )
+            }
         }
     }
 }
@@ -134,21 +141,27 @@ fun AnswerResult(
                 Text(
                     text = stringResource(R.string.answer_character),
                     fontWeight = FontWeight.Bold,
+                    modifier = Modifier.align(Alignment.CenterVertically)
                 )
-                Text(
-                    text = quiz.character,
-                    color = Color.Red,
-                    fontWeight = FontWeight.Bold,
-                )
-            }
-            Button(
-                onClick = { navigateToCharacterImage(quiz.characterUrl) },
-                colors = ButtonDefaults.textButtonColors(
-                    backgroundColor = Color.Magenta,
-                    contentColor = Color.White
-                )
-            ) {
-                Text(text = stringResource(R.string.check_character_image))
+                TextButton(
+                    onClick = { navigateToCharacterImage(quiz.characterUrl) },
+                    contentPadding = PaddingValues(0.dp)
+                ) {
+                    Text(
+                        text = quiz.character,
+                        color = Color.Blue,
+                        fontWeight = FontWeight.Bold,
+                        textDecoration = TextDecoration.Underline
+                    )
+                }
+                IconButton(onClick = { navigateToCharacterImage(quiz.characterUrl) }) {
+                    Icon(
+                        imageVector = Icons.Filled.Search,
+                        contentDescription = "search",
+                        tint = Color.Blue,
+
+                        )
+                }
             }
         }
     }
@@ -166,6 +179,24 @@ fun QuizItemPreview() {
             characterUrl = "https://www.google.com/search?tbm=isch&q=One Piece+Luffy"
         ),
         onQuoteTranslate = {},
+        navigateToCharacterImage = {}
+    )
+}
+
+@Composable
+@Preview
+fun AnswerResultPreview() {
+    AnswerResult(
+        isLoading = false,
+        quiz = Quiz(
+            id = 1,
+            character = "Luffy",
+            quote = "I'm going to become the king of the pirates!",
+            translateQuote = "海賊王に俺はなる！",
+            characterUrl = "https://www.google.com/search?tbm=isch&q=One Piece+Luffy"
+        ),
+        isExpanded = true,
+        shownTranslateQuote = {},
         navigateToCharacterImage = {}
     )
 }

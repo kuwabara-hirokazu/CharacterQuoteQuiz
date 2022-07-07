@@ -35,7 +35,7 @@ fun QuizListScreen(viewModel: QuizViewModel, navController: NavController, showE
                 )
             }
             item {
-                if (quizState.quizList.isNotEmpty() && quizState.error != null) LoadingIndicator { viewModel.getQuizList() }
+                if (quizState.quizList.isNotEmpty() && quizState.error == null) LoadingIndicator { viewModel.getQuizList() }
             }
         }
         quizState.error?.let {
